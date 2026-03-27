@@ -1,0 +1,34 @@
+# Subprojects (independent git repos)
+/ike-bom/
+/ike-knowledge-source-template/
+/komet/
+/komet-desktop/
+/rocks-kb/
+/tinkar-composer/
+/tinkar-core/
+
+# Build output
+/target/
+
+# IDE
+/.idea/
+*.iml
+
+# OS
+.DS_Store
+
+# Build standards (unpacked during build, never committed)
+/.claude/standards/
+
+# Build logs
+build.log
+
+# Documents (not part of the aggregator)
+*.pdf
+*.docx
+*.eml
+*.adoc
+
+# Maven
+/network/
+/META-INF/

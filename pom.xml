@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.1.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd"
+         root="true">
+  <modelVersion>4.1.0</modelVersion>
+
+  <groupId>network.ike</groupId>
+  <artifactId>ike-komet-desktop-ws</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>IKE Komet Desktop Workspace</name>
+
+  <distributionManagement>
+    <repository>
+      <id>ike-releases</id>
+      <url>${deploy.release.url}</url>
+    </repository>
+    <snapshotRepository>
+      <id>ike-snapshots</id>
+      <url>${deploy.snapshot.url}</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <subprojects>
+    <subproject>ike-bom</subproject>
+<!--    <subproject>ike-knowledge-source-template</subproject>-->
+    <subproject>komet</subproject>
+    <subproject>komet-desktop</subproject>
+    <subproject>rocks-kb</subproject>
+    <subproject>tinkar-core</subproject>
+    <subproject>tinkar-composer</subproject>
+  </subprojects>
+  <profiles>
+    <profile>
+      <id>jlink-debug</id>
+      <!-- Empty profile - submodules that don't override it will just inherit this no-op version -->
+    </profile>
+    <profile>
+      <id>jlink-profile</id>
+      <!-- Empty profile - submodules that don't override it will just inherit this no-op version -->
+    </profile>
+    <profile>
+      <id>jlink-standard</id>
+      <!-- Empty profile - submodules that don't override it will just inherit this no-op version -->
+    </profile>
+  </profiles>
+</project>
