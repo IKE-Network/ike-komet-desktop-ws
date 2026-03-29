@@ -24,13 +24,23 @@
 
   <subprojects>
     <subproject>ike-bom</subproject>
-<!--    <subproject>ike-knowledge-source-template</subproject>-->
     <subproject>komet</subproject>
     <subproject>komet-desktop</subproject>
     <subproject>rocks-kb</subproject>
     <subproject>tinkar-core</subproject>
     <subproject>tinkar-composer</subproject>
   </subprojects>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>network.ike</groupId>
+        <artifactId>ike-maven-plugin</artifactId>
+        <version>37</version>
+      </plugin>
+    </plugins>
+  </build>
+
   <profiles>
     <profile>
       <id>jlink-debug</id>
