@@ -1,0 +1,126 @@
+# workspace.yaml — IKE Komet Desktop Workspace Manifest
+# ══════════════════════════════════════════════════════
+#
+# Full-stack workspace for building the Komet desktop application:
+# tinkar backend, komet frontend, and desktop shell.
+#
+# Convention: workspace repos use the `-ws` suffix.
+# See IKE-MAVEN.md naming conventions for the full standard.
+
+schema-version: "1.0"
+generated: 2026-03-29
+
+defaults:
+  branch: main
+  maven-version: "4.0.0-rc-5"
+
+component-types:
+  software:
+    description: "Java software modules"
+    build-command: "mvn clean verify"
+    checkpoint-mechanism: git-tag
+  infrastructure:
+    description: "Build tooling, BOMs, shared resources"
+    build-command: "mvn clean install"
+    checkpoint-mechanism: git-tag
+
+components:
+
+  ike-bom:
+    type: infrastructure
+    description: >
+      Bill of Materials centralizing dependency versions
+      for all IKE incubator modules.
+    repo: https://knowledge-graphlet@github.com/knowledge-graphlet/ike-bom.git
+    branch: main
+    version: 3.0.7-SNAPSHOT
+    groupId: dev.ikm.ike
+    depends-on: []
+
+  tinkar-core:
+    type: software
+    description: >
+      Core backend: data model, entity framework, providers
+      (RocksDB, MVStore, SpinedArray), search, reasoning, and
+      coordinate system.
+    repo: https://knowledge-graphlet@github.com/ikmdev/tinkar-core.git
+    branch: main
+    version: 1.127.2-SNAPSHOT
+    groupId: dev.ikm.tinkar
+    depends-on:
+      - component: ike-bom
+        relationship: build
+        version-property: ike-bom.version
+
+  rocks-kb:
+    type: software
+    description: >
+      RocksDB-based knowledge base storage engine.
+    repo: https://knowledge-graphlet@github.com/ikmdev/rocks-kb.git
+    branch: main
+    version: 0.1.0-SNAPSHOT
+    groupId: dev.ikm.ike
+    depends-on:
+      - component: ike-bom
+        relationship: build
+        version-property: ike-bom.version
+      - component: tinkar-core
+        relationship: build
+        version-property: tinkar-core.version
+
+  tinkar-composer:
+    type: software
+    description: >
+      Fluent API for composing tinkar entities (concepts,
+      semantics, patterns, stamps).
+    repo: https://knowledge-graphlet@github.com/ikmdev/tinkar-composer.git
+    branch: main
+    version: 1.14.0-SNAPSHOT
+    groupId: dev.ikm.tinkar
+    depends-on:
+      - component: ike-bom
+        relationship: build
+        version-property: ike-bom.version
+      - component: tinkar-core
+        relationship: build
+        version-property: tinkar-core.version
+
+  komet:
+    type: software
+    description: >
+      Komet UI framework: JavaFX components, views, layout
+      editor, and kview modules.
+    repo: https://knowledge-graphlet@github.com/ikmdev/komet.git
+    branch: main
+    version: 1.59.0-SNAPSHOT
+    groupId: dev.ikm.komet
+    depends-on:
+      - component: ike-bom
+        relationship: build
+      - component: tinkar-core
+        relationship: build
+      - component: rocks-kb
+        relationship: build
+      - component: tinkar-composer
+        relationship: build
+
+  komet-desktop:
+    type: software
+    description: >
+      Desktop application shell: assembles komet modules into
+      a runnable JavaFX + jlink desktop application.
+    repo: https://knowledge-graphlet@github.com/ikmdev/komet-desktop.git
+    branch: main
+    version: 3.0.0-SNAPSHOT
+    groupId: dev.ikm.ike
+    depends-on:
+      - component: ike-bom
+        relationship: build
+        version-property: ike-bom.version
+      - component: komet
+        relationship: build
+
+groups:
+  backend: [ike-bom, tinkar-core, rocks-kb, tinkar-composer]
+  frontend: [komet, komet-desktop]
+  all: [backend, frontend]
