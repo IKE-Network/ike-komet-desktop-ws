@@ -36,7 +36,7 @@
       <plugin>
         <groupId>network.ike</groupId>
         <artifactId>ike-maven-plugin</artifactId>
-        <version>39</version>
+        <version>40</version>
       </plugin>
     </plugins>
   </build>
