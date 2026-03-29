@@ -17,8 +17,8 @@
 # OS
 .DS_Store
 
-# Build standards (unpacked during build, never committed)
-/.claude/standards/
+# Claude Code local settings and build standards
+/.claude/
 
 # Build logs
 build.log
