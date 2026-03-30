@@ -37,7 +37,69 @@ mvn --version
 > **Note:** Maven 3.x will not work — the POMs use features only available
 > in Maven 4.
 
-## Step 3 — Store Credentials
+## Step 3 — Configure Git Credentials
+
+All component repos are public on GitHub, so **cloning and fetching require
+no credentials**. You only need Git credentials configured if you will be
+pushing (i.e., you are an active committer on one of the component repos).
+
+### Single GitHub account (most developers)
+
+The simplest approach is HTTPS with a **Personal Access Token (PAT)**:
+
+1. Generate a PAT at GitHub → Settings → Developer settings → Personal access
+   tokens. Grant `repo` scope.
+2. Store the PAT in your OS credential store so Git uses it automatically:
+
+   **Windows** — Git for Windows installs the Windows Credential Manager
+   helper by default. The first time you `git push`, Git will prompt for your
+   GitHub username and the PAT as the password. Windows Credential Manager
+   saves it and you won't be prompted again.
+
+   **macOS** — The Git Credential Helper for macOS Keychain ships with Xcode
+   Command Line Tools and is usually pre-configured. Confirm with:
+   ```bash
+   git config --global credential.helper
+   # osxkeychain
+   ```
+   On first push Git prompts once, then stores the token in Keychain.
+
+   **Linux** — Install and enable a credential store (e.g., `libsecret`):
+   ```bash
+   git config --global credential.helper /usr/lib/git-core/git-credential-libsecret
+   ```
+
+### Multiple GitHub accounts on one machine
+
+If you push to repos under different GitHub organisations using different
+accounts, embed the account identity in Git's SSH config rather than in
+repo URLs.
+
+Create or extend `~/.ssh/config` with a host alias per account:
+
+```
+Host github.com-account-one
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_account_one
+
+Host github.com-account-two
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_account_two
+```
+
+When cloning or adding a remote for a repo that belongs to `account-two`,
+use the alias as the hostname:
+
+```bash
+git clone git@github.com-account-two:ikmdev/tinkar-core.git
+```
+
+Git resolves the alias through `~/.ssh/config`, uses the correct key, and
+your repo URLs stay free of embedded usernames.
+
+## Step 4 — Store Nexus Credentials
 
 Credentials are referenced in `settings.xml` via environment variables so
 that no passwords are stored in plain text in version-controlled files.
@@ -89,7 +151,7 @@ export IKE_PWD_RELEASES="your-password"
 
 > If storing directly, restrict file permissions: `chmod 600 ~/.bashrc`
 
-## Step 4 — Configure `~/.m2/settings.xml`
+## Step 5 — Configure `~/.m2/settings.xml`
 
 Create or update `~/.m2/settings.xml` with the following. If you already
 have a `settings.xml`, merge the `<servers>`, `<profiles>`, and
@@ -148,7 +210,7 @@ have a `settings.xml`, merge the `<servers>`, `<profiles>`, and
 </settings>
 ```
 
-## Step 5 — Verify
+## Step 6 — Verify
 
 Run a quick resolution check from any directory:
 
@@ -158,7 +220,7 @@ mvn dependency:get -Dartifact=network.ike:ike-parent:42:pom
 
 You should see `BUILD SUCCESS`. If you see authentication errors, double-check
 that your terminal session has the `IKE_USER` and `IKE_PWD_RELEASES`
-environment variables set (Step 3).
+environment variables set (Step 4).
 
 ---
 
