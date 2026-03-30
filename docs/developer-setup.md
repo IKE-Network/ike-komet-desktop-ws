@@ -164,18 +164,21 @@ have a `settings.xml`, merge the `<servers>`, `<profiles>`, and
                               https://maven.apache.org/xsd/settings-1.2.0.xsd">
 
   <servers>
+    <!-- Read access to all published artifacts -->
     <server>
       <id>ike-public</id>
       <username>${env.IKE_USER}</username>
       <password>${env.IKE_PWD_RELEASES}</password>
     </server>
+    <!-- SNAPSHOT deploy target -->
     <server>
       <id>ike-snapshots</id>
       <username>${env.IKE_USER}</username>
       <password>${env.IKE_PWD_RELEASES}</password>
     </server>
+    <!-- Release deploy target for developers (TeamCity promotes to ike-releases) -->
     <server>
-      <id>ike-releases</id>
+      <id>ike-staging</id>
       <username>${env.IKE_USER}</username>
       <password>${env.IKE_PWD_RELEASES}</password>
     </server>

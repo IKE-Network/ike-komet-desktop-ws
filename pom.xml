@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  IKE Komet Desktop Workspace Aggregator
+
+  Every subproject is inside a file-activated profile so the reactor
+  automatically includes only the repos that are physically cloned.
+  Clone more repos and they join the reactor on the next build.
+
+  Usage:
+    mvn clean install                        # All cloned repos
+    mvn clean install -pl tinkar-core -am    # One component + deps
+    mvn ike:init                             # Clone all repos
+    mvn ike:status                           # Git status across repos
+    mvn ike:dashboard                        # Full workspace overview
+-->
 <project xmlns="http://maven.apache.org/POM/4.1.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd"
@@ -8,7 +22,7 @@
   <parent>
     <groupId>network.ike</groupId>
     <artifactId>ike-parent</artifactId>
-    <version>42</version>
+    <version>44</version>
     <relativePath/>
   </parent>
 
@@ -18,27 +32,94 @@
   <packaging>pom</packaging>
   <name>IKE Komet Desktop Workspace</name>
 
-  <subprojects>
-    <subproject>ike-bom</subproject>
-    <subproject>komet</subproject>
-    <subproject>komet-desktop</subproject>
-    <subproject>rocks-kb</subproject>
-    <subproject>tinkar-core</subproject>
-    <subproject>tinkar-composer</subproject>
-  </subprojects>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>network.ike</groupId>
+        <artifactId>ike-maven-plugin</artifactId>
+        <version>${ike-maven-plugin.version}</version>
+      </plugin>
+    </plugins>
+  </build>
 
   <profiles>
+
     <profile>
-      <id>jlink-debug</id>
-      <!-- Empty profile - submodules that don't override it will just inherit this no-op version -->
+      <id>with-ike-bom</id>
+      <activation>
+        <file>
+          <exists>${project.basedir}/ike-bom/pom.xml</exists>
+        </file>
+      </activation>
+      <subprojects>
+        <subproject>ike-bom</subproject>
+      </subprojects>
     </profile>
+
     <profile>
-      <id>jlink-profile</id>
-      <!-- Empty profile - submodules that don't override it will just inherit this no-op version -->
+      <id>with-tinkar-core</id>
+      <activation>
+        <file>
+          <exists>${project.basedir}/tinkar-core/pom.xml</exists>
+        </file>
+      </activation>
+      <subprojects>
+        <subproject>tinkar-core</subproject>
+      </subprojects>
     </profile>
+
     <profile>
-      <id>jlink-standard</id>
-      <!-- Empty profile - submodules that don't override it will just inherit this no-op version -->
+      <id>with-tinkar-composer</id>
+      <activation>
+        <file>
+          <exists>${project.basedir}/tinkar-composer/pom.xml</exists>
+        </file>
+      </activation>
+      <subprojects>
+        <subproject>tinkar-composer</subproject>
+      </subprojects>
     </profile>
+
+    <profile>
+      <id>with-rocks-kb</id>
+      <activation>
+        <file>
+          <exists>${project.basedir}/rocks-kb/pom.xml</exists>
+        </file>
+      </activation>
+      <subprojects>
+        <subproject>rocks-kb</subproject>
+      </subprojects>
+    </profile>
+
+    <profile>
+      <id>with-komet</id>
+      <activation>
+        <file>
+          <exists>${project.basedir}/komet/pom.xml</exists>
+        </file>
+      </activation>
+      <subprojects>
+        <subproject>komet</subproject>
+      </subprojects>
+    </profile>
+
+    <profile>
+      <id>with-komet-desktop</id>
+      <activation>
+        <file>
+          <exists>${project.basedir}/komet-desktop/pom.xml</exists>
+        </file>
+      </activation>
+      <subprojects>
+        <subproject>komet-desktop</subproject>
+      </subprojects>
+    </profile>
+
+    <!-- jlink profiles (empty stubs for subprojects that define them) -->
+    <profile><id>jlink-debug</id></profile>
+    <profile><id>jlink-profile</id></profile>
+    <profile><id>jlink-standard</id></profile>
+
   </profiles>
 </project>
