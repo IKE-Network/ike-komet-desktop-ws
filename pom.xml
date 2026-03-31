@@ -116,10 +116,11 @@
       </subprojects>
     </profile>
 
-    <!-- jlink profiles (empty stubs for subprojects that define them) -->
+    <!-- jlink / packaging profiles (empty stubs for subprojects that define them) -->
     <profile><id>jlink-debug</id></profile>
     <profile><id>jlink-profile</id></profile>
     <profile><id>jlink-standard</id></profile>
+    <profile><id>create-desktop-installer</id></profile>
 
   </profiles>
 </project>
