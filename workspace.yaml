@@ -124,3 +124,20 @@ groups:
   backend: [ike-bom, tinkar-core, rocks-kb, tinkar-composer]
   frontend: [komet, komet-desktop]
   all: [backend, frontend]
+
+dev-config:
+  launch-project: komet-desktop
+  main-module: dev.ikm.komet.desktop
+  main-class: dev.ikm.komet.desktop.App
+  jvm-args:
+    - --enable-preview
+    - -Xmx42g
+    - --add-opens javafx.graphics/javafx.scene=org.controlsfx.controls
+    - --add-exports javafx.controls/com.sun.javafx.scene.control.behavior=dev.ikm.komet.navigator
+    - --add-exports javafx.base/com.sun.javafx.event=one.jpro.platform.file
+    - -Djava.util.concurrent.ForkJoinPool.common.exceptionHandler=dev.ikm.tinkar.common.alert.UncaughtExceptionAlertStreamer
+    - --add-modules jdk.incubator.vector
+  debug-args:
+    - -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+  profile-args:
+    - -agentpath:/Applications/JProfiler.app/Contents/Resources/app/bin/macos/libjprofilerti.jnilib=port=8849,nowait
